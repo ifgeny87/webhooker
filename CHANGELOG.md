@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/ifgeny87/webhooker/compare/v1.0.0...v1.1.0) (2026-01-30)
+
+
+### Features
+
+* added logger file writing with rotation ([660d582](https://github.com/ifgeny87/webhooker/commit/660d5828db8ff415f1bb039a736c8c3d02a851c9))
+
 # 1.0.0 (2026-01-30)
 
 
