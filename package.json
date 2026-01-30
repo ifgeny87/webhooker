@@ -11,6 +11,7 @@
 		"lint": "eslint src tests --ext .ts",
 		"prebuild": "npm run lint",
 		"build": "node -e \"require('fs').rmSync('build', {recursive: true, force: true})\" && tsc && node scripts/fix-esm-imports.cjs",
+		"postbuild": "node scripts/generate-build-package-json.cjs",
 		"prestart": "npm run build",
 		"start": "node build/src/main.js",
 		"pretest": "npm run build",
@@ -31,6 +32,9 @@
 	"devDependencies": {
 		"@commitlint/cli": "20.2.0",
 		"@commitlint/config-conventional": "20.2.0",
+		"@semantic-release/changelog": "6.0.3",
+		"@semantic-release/exec": "7.1.0",
+		"@semantic-release/git": "10.0.1",
 		"@types/chai": "4.3.16",
 		"@types/mocha": "10.0.10",
 		"@types/node": "22.19.7",
