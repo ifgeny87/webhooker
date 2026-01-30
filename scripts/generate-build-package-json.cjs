@@ -22,16 +22,21 @@ const rootPackageJson = readJson(rootPackageJsonPath);
 const buildPackageJson = {
 	name: rootPackageJson.name,
 	version: rootPackageJson.version,
-	private: rootPackageJson.private,
 	description: rootPackageJson.description,
+	author: rootPackageJson.author,
+	repository: rootPackageJson.repository,
 	type: rootPackageJson.type,
 	main: 'src/main.js',
 	engines: rootPackageJson.engines,
 	dependencies: rootPackageJson.dependencies,
-	scripts: {
-		start: 'node src/main.js',
-	},
 };
 
 writeJson(path.join(buildDir, 'package.json'), buildPackageJson);
+
+// README для дистрибутива (чтобы он попадал в tarball из pkgRoot=build)
+const readmeSrc = path.join(repoRoot, 'README.md');
+const readmeDst = path.join(buildDir, 'README.md');
+if (fs.existsSync(readmeSrc)) {
+	fs.copyFileSync(readmeSrc, readmeDst);
+}
 

@@ -114,6 +114,34 @@ JSON с полями:
 
 Конфиг валидируется Zod-схемой при старте; проверяется уникальность пар (method, path).
 
+## Логирование в файл с ротацией
+
+По умолчанию логи пишутся в stdout. Если задана переменная окружения `LOG_DIR`, логгер дополнительно
+пишет логи в файлы в указанной папке и делает ротацию по размеру.
+
+- `LOG_DIR` — папка для логов (если задана, включается запись в файл).
+- `LOG_FILE_SIZE_KB` — максимальный размер одного файла лога в KB. По умолчанию 1024 KB (1 MB).
+
+При каждом старте приложения создаётся **новый файл** вида:
+
+`webhooker-2026-01-30T13-52-31.278Z.log`
+
+Пример запуска из консоли:
+
+```bash
+mkdir -p /var/log/webhooker
+LOG_DIR=/var/log/webhooker LOG_FILE_SIZE_KB=1024 WEBHOOKER_CONFIG=/etc/webhooker/config.json node src/main.js
+```
+
+Пример для `systemd` (добавьте в unit-файл):
+
+```ini
+Environment=LOG_DIR=/var/log/webhooker
+Environment=LOG_FILE_SIZE_KB=1024
+```
+
+Важно: пользователь сервиса должен иметь права на запись в `LOG_DIR` (например `chown -R webhooker:webhooker /var/log/webhooker`).
+
 ### Как задаётся конфиг
 
 - Если `WEBHOOKER_CONFIG` **не задан**, приложение ищет `./config.json` в текущей директории (cwd).

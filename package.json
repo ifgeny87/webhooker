@@ -1,8 +1,12 @@
 {
 	"name": "webhooker",
 	"version": "1.0.0",
-	"private": true,
 	"description": "HTTP webhook server that runs scripts by config",
+	"author": "ifgeny87",
+	"repository": {
+		"type": "git",
+		"url": "git+git@github.com:ifgeny87/webhooker.git"
+	},
 	"type": "module",
 	"main": "build/src/main.js",
 	"scripts": {

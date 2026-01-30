@@ -1,5 +1,7 @@
 import { describe, it, afterEach } from 'mocha';
 import { expect } from 'chai';
+import { mkdirSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 import {
 	setLogLevel,
 	getLogLevel,
@@ -10,9 +12,19 @@ import {
 } from '../../build/src/core/logger.js';
 
 describe('logger', () => {
+	const tmpLogDir = join(process.cwd(), '.tmp-test-logs');
+
 	afterEach(() => {
 		delete process.env.LOG_LEVEL;
+		delete process.env.LOG_DIR;
+		delete process.env.LOG_FILE_SIZE_KB;
 		setLogLevel('info');
+
+		try {
+			rmSync(tmpLogDir, { recursive: true, force: true });
+		} catch {
+			// ignore
+		}
 	});
 
 	it('logger.info outputs without throw', () => {
@@ -95,5 +107,34 @@ describe('logger', () => {
 	it('logEnv does not throw', () => {
 		setLogLevel('info');
 		expect(() => logEnv()).not.to.throw();
+	});
+
+	it('writes logs to file when LOG_DIR is set', () => {
+		mkdirSync(tmpLogDir, { recursive: true });
+		process.env.LOG_DIR = tmpLogDir;
+
+		setLogLevel('info');
+		logger.info('file-test', { component: 'Test' });
+
+		const files = readdirSync(tmpLogDir).filter((f) => f.endsWith('.log'));
+		expect(files.length).to.be.greaterThan(0);
+
+		const content = readFileSync(join(tmpLogDir, files[0]!), 'utf8');
+		expect(content).to.include('"message":"file-test"');
+	});
+
+	it('rotates log file when size reaches LOG_FILE_SIZE_KB', () => {
+		mkdirSync(tmpLogDir, { recursive: true });
+		process.env.LOG_DIR = tmpLogDir;
+		process.env.LOG_FILE_SIZE_KB = '1';
+
+		setLogLevel('info');
+		const big = 'x'.repeat(400);
+		for (let i = 0; i < 50; i += 1) {
+			logger.info('rotate', { component: 'Test', big, i });
+		}
+
+		const files = readdirSync(tmpLogDir).filter((f) => f.endsWith('.log'));
+		expect(files.length).to.be.greaterThan(1);
 	});
 });
