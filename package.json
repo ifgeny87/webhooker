@@ -1,0 +1,49 @@
+{
+	"name": "webhooker",
+	"version": "1.0.0",
+	"private": true,
+	"description": "HTTP webhook server that runs scripts by config",
+	"type": "module",
+	"main": "build/src/main.js",
+	"scripts": {
+		"prepare": "test ! -d .git || husky",
+		"dev": "cross-env LOG_LEVEL=debug WEBHOOKER_CONFIG=env/dev/config.simple.json npx tsx watch src/main.ts",
+		"lint": "eslint src tests --ext .ts",
+		"prebuild": "npm run lint",
+		"build": "node -e \"require('fs').rmSync('build', {recursive: true, force: true})\" && tsc && node scripts/fix-esm-imports.cjs",
+		"prestart": "npm run build",
+		"start": "node build/src/main.js",
+		"pretest": "npm run build",
+		"test": "c8 --reporter=text --include build/src --exclude build/src/main.js node --loader ts-node/esm node_modules/mocha/bin/mocha.js --extensions ts tests/**/*.test.ts",
+		"pretest:coverage": "npm run build",
+		"test:coverage": "c8 --reporter=text --reporter=lcov --lines 95 --functions 95 --branches 95 --include build/src --exclude build/src/main.js node --loader ts-node/esm node_modules/mocha/bin/mocha.js --extensions ts tests/**/*.test.ts",
+		"predocker:build": "npm run test",
+		"docker:build": "docker build -t webhooker .",
+		"prerelease": "npm run test",
+		"release": "semantic-release"
+	},
+	"engines": {
+		"node": ">=18"
+	},
+	"dependencies": {
+		"zod": "3.25.76"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "20.2.0",
+		"@commitlint/config-conventional": "20.2.0",
+		"@types/chai": "4.3.16",
+		"@types/mocha": "10.0.10",
+		"@types/node": "22.19.7",
+		"c8": "10.1.3",
+		"chai": "4.5.0",
+		"cross-env": "7.0.3",
+		"eslint": "9.39.2",
+		"husky": "9.1.7",
+		"mocha": "10.8.2",
+		"semantic-release": "24.2.9",
+		"ts-node": "10.9.2",
+		"tsx": "4.19.2",
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.54.0"
+	}
+}

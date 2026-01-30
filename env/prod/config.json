@@ -1,0 +1,21 @@
+{
+  "host": "0.0.0.0",
+  "port": 3000,
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/webhook",
+      "bearerKey": "production-secret",
+      "bearerSource": "header",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": "production"
+        }
+      ],
+      "timeoutMs": 60000,
+      "includeLogsInResponse": false
+    }
+  ]
+}

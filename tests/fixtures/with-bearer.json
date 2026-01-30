@@ -1,0 +1,69 @@
+{
+  "logLevel": "info",
+  "host": "127.0.0.1",
+  "port": 0,
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/webhook",
+      "bearerSource": "header",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "console.log('ok')"]
+        }
+      ],
+      "timeoutMs": 5000,
+      "includeLogsInResponse": true
+    },
+    {
+      "method": "POST",
+      "path": "/secure",
+      "bearerKey": "secret123",
+      "bearerSource": "header",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "process.exit(0)"]
+        }
+      ],
+      "timeoutMs": 3000,
+      "includeLogsInResponse": false
+    },
+    {
+      "method": "GET",
+      "path": "/query-auth",
+      "bearerKey": "query-secret",
+      "bearerSource": "query",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "process.exit(0)"]
+        }
+      ],
+      "timeoutMs": 2000,
+      "includeLogsInResponse": false
+    },
+    {
+      "method": "POST",
+      "path": "/two-cmds",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "console.log('first')"]
+        },
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "console.log('second')"]
+        }
+      ],
+      "timeoutMs": 5000,
+      "includeLogsInResponse": true
+    }
+  ]
+}

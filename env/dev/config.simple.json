@@ -1,0 +1,86 @@
+{
+  "host": "0.0.0.0",
+  "port": 3000,
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/chain",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": ["first"]
+        },
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": ["second"]
+        },
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": ["third"]
+        }
+      ],
+      "timeoutMs": 100,
+      "includeLogsInResponse": true
+    },
+    {
+      "path": "/sleep",
+      "commands": [
+        {
+          "command": "sleep",
+          "args": 1
+        }
+      ],
+      "timeoutMs": 100,
+      "includeLogsInResponse": false
+    },
+    {
+      "method": "POST",
+      "path": "/webhook",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": ["hello from webhook"]
+        },
+        {
+          "command": "cmd",
+          "args": "/c echo hello"
+        }
+      ],
+      "timeoutMs": 500,
+      "includeLogsInResponse": true
+    },
+    {
+      "method": "POST",
+      "path": "/secure",
+      "bearerKey": "secret-token-123",
+      "bearerSource": "header",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "node",
+          "args": ["-e", "console.log('authorized')"]
+        }
+      ],
+      "timeoutMs": 3000,
+      "includeLogsInResponse": true
+    },
+    {
+      "path": "/query-auth",
+      "bearerKey": "query-secret",
+      "bearerSource": "query",
+      "commands": [
+        {
+          "cwd": ".",
+          "command": "echo",
+          "args": ["ok"]
+        }
+      ],
+      "timeoutMs": 2000,
+      "includeLogsInResponse": false
+    }
+  ]
+}
