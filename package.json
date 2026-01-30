@@ -14,7 +14,7 @@
 		"dev": "cross-env LOG_LEVEL=debug WEBHOOKER_CONFIG=env/dev/config.simple.json npx tsx watch src/main.ts",
 		"lint": "eslint src tests --ext .ts",
 		"prebuild": "npm run lint",
-		"build": "node -e \"require('fs').rmSync('build', {recursive: true, force: true})\" && tsc && node scripts/fix-esm-imports.cjs",
+		"build": "rm -rf build && tsc && node scripts/fix-esm-imports.cjs",
 		"postbuild": "node scripts/generate-build-package-json.cjs",
 		"prestart": "npm run build",
 		"start": "node build/src/main.js",
@@ -25,7 +25,7 @@
 		"predocker:build": "npm run test",
 		"docker:build": "docker build -t webhooker .",
 		"prerelease": "npm run test",
-		"release": "semantic-release"
+		"release": "rm -rf dist && semantic-release"
 	},
 	"engines": {
 		"node": ">=18"
